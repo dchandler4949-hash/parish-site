@@ -1,0 +1,127 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /**
+     * POLICY & SURVEY PLATFORM SECURITY RULES
+     *
+     * Core Philosophy:
+     * This ruleset implements a public-consumption and anonymous-contribution model.
+     * Educational and policy content is globally readable but managed exclusively by
+     * administrative accounts. To support public discourse without barriers, survey
+     * submissions are open to all users (including anonymous authenticated users),
+     * while maintaining strict immutability once submitted to ensure data integrity.
+     *
+     * Data Structure:
+     * - /policyPages/{id}: Top-level informational pages.
+     * - /policyPages/{id}/surveys/{id}: Surveys nested within policy topics.
+     * - /policyPages/{id}/surveys/{id}/questions/{id}: Specific questions for each survey.
+     * - /surveyResponses/{id}: Top-level flat collection for anonymous submissions.
+     * - /surveyResponses/{id}/answers/{id}: Individual answers for a submission.
+     *
+     * Key Security Decisions:
+     * 1. Public Content: All content (Policy Pages, Surveys, Questions) is readable by anyone.
+     * 2. Administrative Control: Writes to content collections require an admin record 
+     *    in the `/admins/` collection.
+     * 3. Anonymous Participation: Survey responses are created by any authenticated user 
+     *    (including Firebase Anonymous Auth) to prevent data spam while allowing privacy.
+     * 4. Immutability: Once a survey response or answer is submitted, it cannot be 
+     *    modified or deleted via the client SDK.
+     *
+     * Denormalization for Authorization:
+     * - Documents include internal ID fields (e.g., `surveyId`, `policyPageId`) to validate 
+     *   relational integrity during creation without requiring expensive cross-document lookups.
+     */
+
+    // --- Helper Functions ---
+
+    /** @description Checks if the user is authenticated (including anonymous). */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /** @description Checks if the user has an entry in the admins collection. */
+    function isAdmin() {
+      return isSignedIn() && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    /** @description Verifies a document exists before update or delete. */
+    function isExisting(resource) {
+      return resource != null;
+    }
+
+    // --- Collection Rules ---
+
+    /**
+     * @description Publicly readable policy pages; admin-only writes.
+     * @path /policyPages/{policyPageId}
+     * @allow get, list: if true;
+     * @allow create: if isAdmin() && request.resource.data.id == policyPageId;
+     * @deny update, delete: if !isAdmin();
+     * @principle Content is public; management is restricted to verified administrators.
+     */
+    match /policyPages/{policyPageId} {
+      allow get, list: if true;
+      allow create: if isAdmin() && request.resource.data.id == policyPageId;
+      allow update, delete: if isAdmin() && isExisting(resource);
+
+      /**
+       * @description Surveys nested under policy pages.
+       * @path /policyPages/{policyPageId}/surveys/{surveyId}
+       * @allow create: if isAdmin() && request.resource.data.policyPageId == policyPageId;
+       * @principle Uses path-based validation to ensure surveys are linked to the correct policy.
+       */
+      match /surveys/{surveyId} {
+        allow get, list: if true;
+        allow create: if isAdmin() && request.resource.data.id == surveyId && request.resource.data.policyPageId == policyPageId;
+        allow update, delete: if isAdmin() && isExisting(resource);
+
+        /**
+         * @description Questions within a specific survey.
+         * @path /policyPages/{policyPageId}/surveys/{surveyId}/questions/{questionId}
+         * @allow create: if isAdmin() && request.resource.data.surveyId == surveyId;
+         * @principle Maintains hierarchical integrity for survey questions.
+         */
+        match /questions/{questionId} {
+          allow get, list: if true;
+          allow create: if isAdmin() && request.resource.data.id == questionId && request.resource.data.surveyId == surveyId;
+          allow update, delete: if isAdmin() && isExisting(resource);
+        }
+      }
+    }
+
+    /**
+     * @description Top-level collection for survey submissions.
+     * @path /surveyResponses/{surveyResponseId}
+     * @allow create: if isSignedIn();
+     * @deny update, delete: if true;
+     * @principle Anonymous users can submit data, but cannot change it post-submission.
+     */
+    match /surveyResponses/{surveyResponseId} {
+      allow get, list: if true;
+      allow create: if isSignedIn() && request.resource.data.id == surveyResponseId;
+      allow update, delete: if false; // Immutable once created
+
+      /**
+       * @description Individual answers belonging to a response.
+       * @path /surveyResponses/{surveyResponseId}/answers/{answerId}
+       * @allow create: if isSignedIn() && request.resource.data.surveyResponseId == surveyResponseId;
+       * @principle Ensures answers are correctly keyed to the parent submission.
+       */
+      match /answers/{answerId} {
+        allow get, list: if true;
+        allow create: if isSignedIn() && request.resource.data.id == answerId && request.resource.data.surveyResponseId == surveyResponseId;
+        allow update, delete: if false; // Immutable once created
+      }
+    }
+
+    /**
+     * @description Administrative roles collection (Internal use).
+     * @path /admins/{uid}
+     */
+    match /admins/{uid} {
+      allow read: if isSignedIn() && request.auth.uid == uid;
+      allow write: if false; // Admin roles should be managed via Firebase Console or Admin SDK
+    }
+  }
+}
