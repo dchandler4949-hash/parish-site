@@ -1,0 +1,103 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Bold Workers Party Style: Pure Red (#FF0000), Black (#000000), White */
+    --background: 0 0% 98%;
+    --foreground: 0 0% 0%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 0%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 0%;
+    --primary: 0 100% 50%; /* Pure Workers Party Red #FF0000 */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 92%;
+    --secondary-foreground: 0 0% 0%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 0%; /* Workers Party Black */
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 0 0% 80%;
+    --input: 0 0% 89.8%;
+    --ring: 0 100% 50%;
+    --radius: 0rem; /* Industrial sharp edges */
+  }
+
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 100% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 98%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 100% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+@keyframes vertical-scroll-down {
+  0% { transform: translateY(-50%); }
+  100% { transform: translateY(0); }
+}
+
+.animate-vertical-scroll-down {
+  animation: vertical-scroll-down 30s linear infinite;
+}
+
+/* Accessibility: High Contrast Mode */
+.high-contrast {
+  --background: 0 0% 0% !important;
+  --foreground: 0 0% 100% !important;
+  --primary: 60 100% 50% !important; /* High-vis yellow */
+  --primary-foreground: 0 0% 0% !important;
+  --accent: 60 100% 50% !important;
+  --accent-foreground: 0 0% 0% !important;
+  --border: 0 0% 100% !important;
+  --card: 0 0% 0% !important;
+  --card-foreground: 0 0% 100% !important;
+}
+
+.high-contrast * {
+  border-color: white !important;
+}
+
+/* Accessibility: Large Text Mode */
+.large-text {
+  font-size: 1.25rem;
+}
+
+.large-text h1 { font-size: 3.5rem !important; }
+.large-text h2 { font-size: 3rem !important; }
+.large-text h3 { font-size: 2.5rem !important; }
+.large-text p, .large-text li, .large-text span { font-size: 1.4rem !important; line-height: 1.6 !important; }
+
+/* Focus Visible for Accessibility */
+*:focus-visible {
+  outline: 4px solid hsl(var(--primary));
+  outline-offset: 2px;
+}

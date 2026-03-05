@@ -1,0 +1,58 @@
+{
+  "placeholderImages": [
+    {
+      "id": "candidate-portrait",
+      "description": "Professional portrait of David Chandler",
+      "imageUrl": "https://picsum.photos/seed/david/800/1000",
+      "imageHint": "professional man"
+    },
+    {
+      "id": "community-hero",
+      "description": "Official heraldic crest of Mildenhall, Barton Mills, Worlington and Freckenham Parishes",
+      "imageUrl": "https://storage.googleapis.com/firebasestudio-v2.appspot.com/projects/nextn-10257/media/6ca609cb-aa04-4df0-9bd4-bb0ee0db99da",
+      "imageHint": "parish crest"
+    },
+    {
+      "id": "policy-education",
+      "description": "Modern classroom setting",
+      "imageUrl": "https://picsum.photos/seed/edu/1200/600",
+      "imageHint": "classroom education"
+    },
+    {
+      "id": "policy-policing",
+      "description": "Community policing and safety",
+      "imageUrl": "https://picsum.photos/seed/police/1200/600",
+      "imageHint": "police community"
+    },
+    {
+      "id": "policy-environment",
+      "description": "Green city park and renewable energy",
+      "imageUrl": "https://picsum.photos/seed/env/1200/600",
+      "imageHint": "nature city"
+    },
+    {
+      "id": "policy-housing",
+      "description": "New residential development",
+      "imageUrl": "https://picsum.photos/seed/house/1200/600",
+      "imageHint": "modern houses"
+    },
+    {
+      "id": "policy-health",
+      "description": "Healthcare professionals and medical facility",
+      "imageUrl": "https://picsum.photos/seed/health/1200/600",
+      "imageHint": "hospital healthcare"
+    },
+    {
+      "id": "electoral-map",
+      "description": "Electoral map of Mildenhall and surrounding parishes",
+      "imageUrl": "https://storage.googleapis.com/firebasestudio-v2.appspot.com/projects/nextn-10257/media/27233816-7299-478a-982d-15ec4c51474e",
+      "imageHint": "electoral map"
+    },
+    {
+      "id": "workers-party-emblem",
+      "description": "Workers Party of Britain emblem",
+      "imageUrl": "https://picsum.photos/seed/wpb/200/200",
+      "imageHint": "workers party emblem"
+    }
+  ]
+}

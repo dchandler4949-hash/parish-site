@@ -1,0 +1,51 @@
+{
+  "entities": {
+    "PolicyPage": {
+      "title": "PolicyPage",
+      "description": "Represents an informational or policy-specific page on the website.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "slug": { "type": "string" },
+        "content": { "type": "string" }
+      },
+      "required": ["id", "title", "slug", "content"]
+    },
+    "SurveyResponse": {
+      "title": "SurveyResponse",
+      "description": "Captures a single user's anonymous submission of the People's Audit survey.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "surveyId": { "type": "string" },
+        "submissionDateTime": { "type": "string", "format": "date-time" },
+        "parish": { "type": "string" },
+        "ageRange": { "type": "string" },
+        "employmentStatus": { "type": "string" },
+        "policingPriority": { "type": "string" },
+        "sendHubSupport": { "type": "string" },
+        "careTaxSupport": { "type": "string" },
+        "feltwellHousingSupport": { "type": "string" },
+        "busStationPriority": { "type": "string" },
+        "smallBusinessRateRelief": { "type": "string" },
+        "devolutionOpposition": { "type": "string" },
+        "participatoryBudgeting": { "type": "string" },
+        "rooftopSolarPreference": { "type": "string" },
+        "finalComments": { "type": "string" },
+        "region": { "type": "string" },
+        "localAuthorityArea": { "type": "string" }
+      },
+      "required": ["surveyId", "submissionDateTime", "parish"]
+    }
+  },
+  "auth": {
+    "providers": ["anonymous"]
+  },
+  "firestore": {
+    "/surveyResponses/{surveyResponseId}": {
+      "schema": { "$ref": "#/backend/entities/SurveyResponse" },
+      "description": "Collection for anonymous survey submissions. Publicly readable for aggregation, immutable once created."
+    }
+  }
+}
