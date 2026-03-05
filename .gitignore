@@ -67,3 +67,30 @@ node_modules/
 
 # dataconnect generated files
 .dataconnect
+# Next.js build output
+.next
+out
+dist
+
+# Build outputs
+.turbo
+*.tsbuildinfo
+
+# Environment files
+.env.local
+.env.*.local
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Cache directories
+.cache
+.parcel-cache
